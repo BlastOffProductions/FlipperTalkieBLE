@@ -1,5 +1,5 @@
 /**
- * TalkieBLE v2.0 — True Flipper-to-Flipper E2E Encrypted BLE Chat
+ * FlipperChat v2.0 — True Flipper-to-Flipper E2E Encrypted BLE Chat
  *
  * ── Hardware requirement ──────────────────────────────────────────────────
  *  Each Flipper Zero needs an ESP32 module flashed with Espressif AT firmware
@@ -15,13 +15,13 @@
  * ── How it works ─────────────────────────────────────────────────────────
  *  HOST side:
  *    1. App sends AT commands to ESP32 to start BLE advertising as
- *       "TalkieBLE" (server role)
+ *       "FlipperChat" (server role)
  *    2. Waits for +BLECONN event from ESP32
  *    3. On connect, enters passphrase-auth exchange then chat
  *
  *  CLIENT side:
  *    1. App sends AT+BLESCAN to ESP32, parses results
- *    2. Shows list of discovered "TalkieBLE" devices on screen
+ *    2. Shows list of discovered "FlipperChat" devices on screen
  *    3. User selects one → app connects via AT+BLECONN
  *    4. Enters passphrase → chat opens
  *
@@ -56,7 +56,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define TAG               "TalkieBLE"
+#define TAG               "FlipperChat"
 
 /* ── Sizes ──────────────────────────────────────────────────────────────── */
 #define MAX_MSG           64
@@ -459,7 +459,7 @@ static void parse_at_line(ChatApp *app, const char *line) {
             /* Default name = addr; will be overwritten if scan_rsp has name */
             memcpy(p->name, p->addr, sizeof(p->name));
 
-            /* Check adv_data for TalkieBLE marker "TalkieBLE" in device name
+            /* Check adv_data for FlipperChat marker "FlipperChat" in device name
                The adv_data is hex-encoded. We look for the scan_rsp_data field
                which comes after 3 commas */
             const char *field = s;
@@ -566,10 +566,10 @@ static bool frame_asm_feed(FrameAssembler *fa, uint8_t b) {
 static void esp_init_host(ChatApp *app) {
     esp_send(app, "AT+RESTORE");        furi_delay_ms(1500);
     esp_send(app, "AT+BLEINIT=2");      furi_delay_ms(300);  /* server role */
-    /* Set device name to "TalkieBLE" so it shows up in scans */
-    esp_send(app, "AT+BLENAME=\"TalkieBLE\""); furi_delay_ms(200);
+    /* Set device name to "FlipperChat" so it shows up in scans */
+    esp_send(app, "AT+BLENAME=\"FlipperChat\""); furi_delay_ms(200);
     /* Advertise with name in adv data */
-    esp_send(app, "AT+BLEADVDATAEX=\"TalkieBLE\",\"FFE0\",\"\",1"); furi_delay_ms(200);
+    esp_send(app, "AT+BLEADVDATAEX=\"FlipperChat\",\"FFE0\",\"\",1"); furi_delay_ms(200);
     esp_send(app, "AT+BLEADVPARAM=50,50,0,0,7,0,,"); furi_delay_ms(200);
     esp_send(app, "AT+BLEGATTSSRVCRE"); furi_delay_ms(200);
     esp_send(app, "AT+BLEGATTSSRVSTART"); furi_delay_ms(200);
@@ -775,7 +775,7 @@ static void scan_draw(Canvas *canvas, void *ctx) {
     ChatApp *app = ctx ? ctx : g_app;
     canvas_clear(canvas);
     canvas_set_font(canvas, FontSecondary);
-    canvas_draw_str(canvas, 0, 9, "TalkieBLE devices:");
+    canvas_draw_str(canvas, 0, 9, "FlipperChat devices:");
 
     furi_mutex_acquire(app->peer_mutex, FuriWaitForever);
     int count = app->peer_count;
@@ -832,7 +832,7 @@ static void connecting_draw(Canvas *canvas, void *ctx) {
     ChatApp *app = ctx ? ctx : g_app;
     canvas_clear(canvas);
     canvas_set_font(canvas, FontPrimary);
-    canvas_draw_str_aligned(canvas, 64, 20, AlignCenter, AlignCenter, "TalkieBLE");
+    canvas_draw_str_aligned(canvas, 64, 20, AlignCenter, AlignCenter, "FlipperChat");
     canvas_set_font(canvas, FontSecondary);
     const char *msg =
         (app->conn == ConnConnecting) ? "Connecting..." :
@@ -962,7 +962,7 @@ static void menu_cb(void *ctx, uint32_t idx) {
             break;
 
         case MenuInfo:
-            popup_set_header(app->info_popup,"TalkieBLE v2.0",64,10,AlignCenter,AlignTop);
+            popup_set_header(app->info_popup,"FlipperChat v2.0",64,10,AlignCenter,AlignTop);
             popup_set_text(app->info_popup,
                 "Needs ESP32 w/ AT FW\n"
                 "on GPIO pins 13/14\n"
@@ -1125,13 +1125,13 @@ static void app_free(ChatApp *app) {
     free(app);
 }
 
-int32_t talkie_ble_app(void *p) {
+int32_t flipper_chat_app(void *p) {
     UNUSED(p);
-    FURI_LOG_I(TAG, "TalkieBLE v2.0 starting");
+    FURI_LOG_I(TAG, "FlipperChat v2.0 starting");
     ChatApp *app = app_alloc();
     switch_view(app, ViewMenu);
     view_dispatcher_run(app->vd);
-    FURI_LOG_I(TAG, "TalkieBLE exiting");
+    FURI_LOG_I(TAG, "FlipperChat exiting");
     app_free(app);
     return 0;
 }
