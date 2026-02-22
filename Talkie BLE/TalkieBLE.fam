@@ -1,0 +1,17 @@
+App(
+    appid           = "flipper_chat",
+    name            = "FlipperChat",
+    apptype         = FlipperAppType.EXTERNAL,
+    entry_point     = "flipper_chat_app",
+    requires        = [
+        "gui",
+        "notification",
+    ],
+    stack_size      = 4 * 1024,
+    order           = 10,
+    fap_category    = "Bluetooth",
+    fap_description = "E2E encrypted Flipper-to-Flipper BLE chat via ESP32",
+    fap_version     = (2, 0),
+    fap_author      = "FlipperChat",
+    fap_weburl      = "",
+)
