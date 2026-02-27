@@ -5,7 +5,7 @@ This is an in development bluetooth chat app for Flipper Zero! I only have one t
 <img width="64" height="64" alt="Talkie BLE" src="https://github.com/user-attachments/assets/2cd48396-0f6f-40c7-8d9c-45a4bafa2ea4" />
 
 # **How to Build**
-1. Connect you Flipper Zero to you computer **(Make sure Flipper Lab or qFlipper is NOT connected)**
+1. Connect your Flipper Zero to your computer **(Make sure Flipper Lab or qFlipper is NOT connected)**
 2. Open Terminal/Powershell
 3. Run: pip install ufbt
 4. Run: pip install --upgrade pip (If Needed)
